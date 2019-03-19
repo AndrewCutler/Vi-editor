@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-
-#include "Command.h"
 #include "Point.h"
 #include "Editor.h"
 #include "ArrayStack.h"

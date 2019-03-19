@@ -1,7 +1,7 @@
 #pragma once
 #include "Point.h"
 #include "ArrayStack.h"
-#include "Command.h"
+#include "Snapshot.h"
 #include "Node.h"
 #include "LinkedList.h"
 #include <string>
@@ -11,7 +11,7 @@ class Editor
 private:
 	LinkedList<string> lines; //store lines
 	Point<int> position;	//maintain cursor position
-	ArrayStack<Command> undoStack;	//stack for undo commands
+	ArrayStack<Snapshot> undoStack;	//stack for undo commands
 
 
 public:

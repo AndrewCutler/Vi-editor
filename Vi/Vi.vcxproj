@@ -115,23 +115,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Command.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PrecondViolatedExcept.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Snapshot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayStack.h" />
-    <ClInclude Include="Command.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ListInterface.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PrecondViolatedExcept.h" />
+    <ClInclude Include="Snapshot.h" />
     <ClInclude Include="StackInterface.h" />
     <ClInclude Include="Editor.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\Downloads\Vi\Vi\Vi\Vi\LinkedList.inl" />
     <None Include="ArrayStack.inl" />
     <None Include="Node.inl" />
     <None Include="Point.inl" />

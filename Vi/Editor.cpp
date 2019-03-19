@@ -38,10 +38,16 @@ void Editor::readFile(string filename)
 }
 
 void Editor::run()
-{
+{	
 	//initialize cursor position
 	position.setX(0);
 	position.setY(0);
+
+	//boolean to double check delete commands
+	bool verifyDelete = false;
+
+	string line;
+	char del;
 
 	display();
 	char command = _getch();
@@ -51,48 +57,59 @@ void Editor::run()
 		//switch statement for command
 		switch (command) {
 		case 'j': //move cursor down
-			//cannot move below end of file
-			//size of file is lines.itemCount (minus 1 because of 0-indexing)
+				  //cannot move below end of file
+				  //size of file is lines.itemCount (minus 1 because of 0-indexing)
 			if (position.getY() < lines.getLength() - 1) {
 				position.setY(position.getY() + 1);
 			}
+			verifyDelete = false;
 			break;
 		case 'k': //move cursor up
 			if (position.getY() > 0) { //top boundary, never negative
 				position.setY(position.getY() - 1);
 			}
+			verifyDelete = false;
 			break;
 		case 'h': //move cursor left
 			if (position.getX() > 0) { //left boundary, never negative
 				position.setX(position.getX() - 1);
 			}
+			verifyDelete = false;
 			break;
 		case 'l': //move cursor right
-			//cannot move right past size of current line
-			//current line accessed with: lines.getEntry(position) where position is cursor's Y-value + 1
-			//lines.getEntry(position) - 1 because of 0-indexing
+				  //cannot move right past size of current line
+				  //current line accessed with: lines.getEntry(position) where position is cursor's Y-value + 1
+				  //lines.getEntry(position) - 1 because of 0-indexing
 			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1) {
 				position.setX(position.getX() + 1);
 			}
+			verifyDelete = false;
 			break;
-		case 'D':
+		case 'd':
 			//how to get second 'd' input?
-			if (command == 'D') {
+			if (verifyDelete) {
 				//remove current line (+1 for 0-indexing)
 				lines.remove(position.getY() + 1);
-			}
-			else
+				verifyDelete = false;
 				break;
+			}
+			verifyDelete = true;
+			break;
+		case 'x': //delete character
+			line = lines.getEntry(position.getY() + 1); //get current line
+			line.erase(2, 1); //delete one character at cursor position
+			lines.replace(position.getY() + 1, line); //replace original with modified line
+			break;
 		default:
 			break;
 		}
-		system("cls");
 		display();
 	}
 }
 
 void Editor::display() //output data
 {
+	system("cls");
 	int lineNumber = 1;
 	while (lineNumber <= lines.getLength()) {
 		cout << lines.getEntry(lineNumber) << endl;

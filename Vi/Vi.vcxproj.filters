@@ -18,20 +18,17 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PrecondViolatedExcept.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Snapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Command.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -56,6 +53,9 @@
     <ClInclude Include="Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Snapshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Point.inl">
@@ -65,6 +65,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="Node.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\Downloads\Vi\Vi\Vi\Vi\LinkedList.inl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

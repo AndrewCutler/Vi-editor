@@ -67,7 +67,7 @@
     <None Include="Node.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\..\..\..\..\..\..\Downloads\Vi\Vi\Vi\Vi\LinkedList.inl">
+    <None Include="LinkedList.inl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

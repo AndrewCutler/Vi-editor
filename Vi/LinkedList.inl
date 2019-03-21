@@ -62,7 +62,10 @@ throw(PrecondViolatedExcept)
 template<class ItemType>
 ItemType LinkedList<ItemType>::replace(int position, const ItemType & newEntry) throw(PrecondViolatedExcept)
 {
-	return newEntry;
+	Node<ItemType> *newPtr = getNodeAt(position);
+	ItemType oldEntry = newPtr->getItem();
+	newPtr->setItem(newEntry);
+	return oldEntry;
 } //end replace
 
 template<class ItemType>

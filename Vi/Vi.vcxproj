@@ -132,8 +132,8 @@
     <ClInclude Include="Editor.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\..\Downloads\Vi\Vi\Vi\Vi\LinkedList.inl" />
     <None Include="ArrayStack.inl" />
+    <None Include="LinkedList.inl" />
     <None Include="Node.inl" />
     <None Include="Point.inl" />
   </ItemGroup>

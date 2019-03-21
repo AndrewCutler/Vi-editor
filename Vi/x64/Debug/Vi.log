@@ -1,9 +1,0 @@
-﻿  Editor.cpp
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\point.inl(11): warning C4812: obsolete declaration style: please use 'Point<TYPE>::Point' instead
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\linkedlist.h(45): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-  c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\linkedlist.h(52): note: see reference to class template instantiation 'LinkedList<ItemType>' being compiled
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\linkedlist.h(50): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\linkedlist.inl(45): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\linkedlist.inl(63): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-c:\users\andrew.cutler\desktop\school\spring 2019\csc 326\vi\vi\vi\editor.cpp(50): warning C4101: 'del': unreferenced local variable
-  Vi.vcxproj -> C:\Users\andrew.cutler\Desktop\School\Spring 2019\CSC 326\Vi\Vi\x64\Debug\Vi.exe

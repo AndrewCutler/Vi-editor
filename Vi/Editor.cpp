@@ -47,7 +47,6 @@ void Editor::run()
 	bool verifyDelete = false;
 
 	string line;
-	char del;
 
 	display();
 	char command = _getch();
@@ -97,7 +96,7 @@ void Editor::run()
 			break;
 		case 'x': //delete character
 			line = lines.getEntry(position.getY() + 1); //get current line
-			line.erase(2, 1); //delete one character at cursor position
+			line.erase(position.getX(), 1); //delete one character at cursor position
 			lines.replace(position.getY() + 1, line); //replace original with modified line
 			break;
 		default:

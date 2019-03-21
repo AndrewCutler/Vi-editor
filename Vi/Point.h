@@ -16,6 +16,8 @@ public:
 	void setX(const int);
 	void setY(const int);
 	//double distance(Point);
+
+	//assignment operator overload
 private:
 	TYPE mX;
 	TYPE mY;

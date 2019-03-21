@@ -47,6 +47,10 @@ void Editor::run()
 	bool verifyDelete = false;
 
 	string line;
+	int currentPosition, lineAboveLength = 0;
+	string lineAbove;
+	Point<int> dummyPosition;
+
 
 	display();
 	char command = _getch();
@@ -60,18 +64,32 @@ void Editor::run()
 				  //size of file is lines.itemCount (minus 1 because of 0-indexing)
 			if (position.getY() < lines.getLength() - 1) {
 				position.setY(position.getY() + 1);
+				placeCursorAt(position);
 			}
 			verifyDelete = false;
 			break;
 		case 'k': //move cursor up
 			if (position.getY() > 0) { //top boundary, never negative
-				position.setY(position.getY() - 1);
+				currentPosition = position.getX();
+				lineAbove = lines.getEntry(position.getY());
+				lineAboveLength = lineAbove.length();
+				if (lineAboveLength < currentPosition) {
+					dummyPosition.setX(lineAboveLength - 1);
+					dummyPosition.setY(position.getY() - 1);
+					placeCursorAt(dummyPosition);
+					position.setY(position.getY() - 1);
+				}
+				else {
+					position.setY(position.getY() - 1);
+					placeCursorAt(position);
+				}
 			}
 			verifyDelete = false;
 			break;
 		case 'h': //move cursor left
 			if (position.getX() > 0) { //left boundary, never negative
 				position.setX(position.getX() - 1);
+				placeCursorAt(position);
 			}
 			verifyDelete = false;
 			break;
@@ -81,6 +99,7 @@ void Editor::run()
 				  //lines.getEntry(position) - 1 because of 0-indexing
 			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1) {
 				position.setX(position.getX() + 1);
+				placeCursorAt(position);
 			}
 			verifyDelete = false;
 			break;
@@ -90,19 +109,22 @@ void Editor::run()
 				//remove current line (+1 for 0-indexing)
 				lines.remove(position.getY() + 1);
 				verifyDelete = false;
+				display();
 				break;
 			}
 			verifyDelete = true;
+				//remove current line (+1 for 0-indexing)
+			
 			break;
 		case 'x': //delete character
 			line = lines.getEntry(position.getY() + 1); //get current line
 			line.erase(position.getX(), 1); //delete one character at cursor position
 			lines.replace(position.getY() + 1, line); //replace original with modified line
+			display();
 			break;
 		default:
 			break;
 		}
-		display();
 	}
 }
 
@@ -120,6 +142,6 @@ void Editor::display() //output data
 
 /*
 	TODO:
-		- move cursor to end of shorter lines when moving up/down (but preserve original X value)
-		- start DD command
+		- move cursor to end of shorter lines when moving udown (but preserve original X value) -- UP IS DONE
+		- change DD command to use _getwch()
 */

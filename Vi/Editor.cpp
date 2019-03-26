@@ -43,9 +43,6 @@ void Editor::run()
 	position.setX(0);
 	position.setY(0);
 
-	//boolean to double check delete commands
-	bool verifyDelete = false;
-
 	string line;
 	int currentPosition, lineAboveLength = 0;
 	string lineAbove;
@@ -53,9 +50,9 @@ void Editor::run()
 
 
 	display();
-	char command = _getch();
+	char command = _getwch();
 	while (command != 'q') { //q to quit for now
-		command = _getch();
+		command = _getwch();
 
 		//switch statement for command
 		switch (command) {
@@ -66,7 +63,6 @@ void Editor::run()
 				position.setY(position.getY() + 1);
 				placeCursorAt(position);
 			}
-			verifyDelete = false;
 			break;
 		case 'k': //move cursor up
 			if (position.getY() > 0) { //top boundary, never negative
@@ -84,14 +80,12 @@ void Editor::run()
 					placeCursorAt(position);
 				}
 			}
-			verifyDelete = false;
 			break;
 		case 'h': //move cursor left
 			if (position.getX() > 0) { //left boundary, never negative
 				position.setX(position.getX() - 1);
 				placeCursorAt(position);
 			}
-			verifyDelete = false;
 			break;
 		case 'l': //move cursor right
 				  //cannot move right past size of current line
@@ -101,20 +95,16 @@ void Editor::run()
 				position.setX(position.getX() + 1);
 				placeCursorAt(position);
 			}
-			verifyDelete = false;
 			break;
 		case 'd':
+			command = _getwch();
 			//how to get second 'd' input?
-			if (verifyDelete) {
+			if (command == 'd') {
 				//remove current line (+1 for 0-indexing)
 				lines.remove(position.getY() + 1);
-				verifyDelete = false;
 				display();
 				break;
 			}
-			verifyDelete = true;
-				//remove current line (+1 for 0-indexing)
-			
 			break;
 		case 'x': //delete character
 			line = lines.getEntry(position.getY() + 1); //get current line

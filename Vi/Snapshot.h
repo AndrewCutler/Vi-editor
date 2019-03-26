@@ -4,10 +4,12 @@ class Snapshot
 {
 public:
 	Snapshot();
+	Snapshot(string, string);
+	void setCommand(string);
+	void setData(string);
 	~Snapshot();
 private:
-	Point<int> savedPosition;
-	string savedValue;
-	string savedCommand;
+	string changedData;
+	string undoCommand;
 };
 

@@ -3,6 +3,7 @@
 #include "windows.h"
 #include <conio.h>
 #include "Point.h"
+#include "Snapshot.h"
 
 
 void placeCursorAt(Point<int> coordinate) {
@@ -48,6 +49,7 @@ void Editor::run()
 	string lineAbove;
 	Point<int> dummyPosition;
 
+	Snapshot snap;
 
 	display();
 	char command = _getwch();
@@ -100,6 +102,10 @@ void Editor::run()
 			command = _getwch();
 			//how to get second 'd' input?
 			if (command == 'd') {
+				//add command to undo stack
+				snap.setCommand("dd"), snap.setData(lines.getEntry(position.getY() + 1));
+				undoStack.push(snap);
+
 				//remove current line (+1 for 0-indexing)
 				lines.remove(position.getY() + 1);
 				display();
@@ -107,6 +113,11 @@ void Editor::run()
 			}
 			break;
 		case 'x': //delete character
+			//add command to undo stack
+			snap.setCommand("x"), snap.setData(lines.getEntry(position.getY() + 1).substr(position.getX(),1));
+			undoStack.push(snap);
+
+			//delete character
 			line = lines.getEntry(position.getY() + 1); //get current line
 			line.erase(position.getX(), 1); //delete one character at cursor position
 			lines.replace(position.getY() + 1, line); //replace original with modified line

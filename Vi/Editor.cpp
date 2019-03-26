@@ -45,11 +45,15 @@ void Editor::run()
 	position.setY(0);
 
 	string line;
-	int currentPosition, lineAboveLength = 0;
-	string lineAbove;
+	int currentPosition, nextLineLength = 0;
+	string nextLine;
 	Point<int> dummyPosition;
 
+	//snapshot
 	Snapshot snap;
+
+	//point in file where command takes place
+	Point<int> place(0,0);
 
 	display();
 	char command = _getwch();
@@ -59,20 +63,40 @@ void Editor::run()
 		//switch statement for command
 		switch (command) {
 		case 'j': //move cursor down
-				  //cannot move below end of file
-				  //size of file is lines.itemCount (minus 1 because of 0-indexing)
+
+			//only move down if eof not reached
 			if (position.getY() < lines.getLength() - 1) {
+
+				//go to end of line, save x-coord when jumping to shorter lines
+				currentPosition = position.getX();
+				nextLine = lines.getEntry(position.getY() + 2);
+				nextLineLength = nextLine.length();
+
+				//if next line is shorter, go to end of it, saving cursor position
+				if (nextLineLength < currentPosition) {
+					dummyPosition.setX(nextLineLength - 1);
+					dummyPosition.setY(position.getY() + 1);
+					placeCursorAt(dummyPosition);
+					position.setY(position.getY() + 1);
+				}
+				else {
 				position.setY(position.getY() + 1);
 				placeCursorAt(position);
+				}
+
 			}
 			break;
 		case 'k': //move cursor up
 			if (position.getY() > 0) { //top boundary, never negative
+
+				//go to end of line, save x-coord when jumping to shorter lines
 				currentPosition = position.getX();
-				lineAbove = lines.getEntry(position.getY());
-				lineAboveLength = lineAbove.length();
-				if (lineAboveLength < currentPosition) {
-					dummyPosition.setX(lineAboveLength - 1);
+				nextLine = lines.getEntry(position.getY());
+				nextLineLength = nextLine.length();
+
+				//if next line is shorter, go to end of it, saving cursor position
+				if (nextLineLength < currentPosition) {
+					dummyPosition.setX(nextLineLength - 1);
 					dummyPosition.setY(position.getY() - 1);
 					placeCursorAt(dummyPosition);
 					position.setY(position.getY() - 1);
@@ -91,8 +115,6 @@ void Editor::run()
 			break;
 		case 'l': //move cursor right
 				  //cannot move right past size of current line
-				  //current line accessed with: lines.getEntry(position) where position is cursor's Y-value + 1
-				  //lines.getEntry(position) - 1 because of 0-indexing
 			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1) {
 				position.setX(position.getX() + 1);
 				placeCursorAt(position);
@@ -100,10 +122,11 @@ void Editor::run()
 			break;
 		case 'd':
 			command = _getwch();
-			//how to get second 'd' input?
 			if (command == 'd') {
-				//add command to undo stack
-				snap.setCommand("dd"), snap.setData(lines.getEntry(position.getY() + 1));
+				//add command and deleted line to undo stack
+				snap.setCommand("dd");		//command code
+				place.setY(position.getY() + 1);	//line number
+				snap.setData(lines.getEntry(position.getY() + 1),place); //save data and line number
 				undoStack.push(snap);
 
 				//remove current line (+1 for 0-indexing)
@@ -113,15 +136,25 @@ void Editor::run()
 			}
 			break;
 		case 'x': //delete character
-			//add command to undo stack
-			snap.setCommand("x"), snap.setData(lines.getEntry(position.getY() + 1).substr(position.getX(),1));
+			//add command and deleted char to undo stack
+			snap.setCommand("x");		//command code
+			place.setX(position.getX());		//location of char in line
+			snap.setData(lines.getEntry(position.getY() + 1).substr(position.getX(), 1),place); //save data/location
 			undoStack.push(snap);
 
 			//delete character
 			line = lines.getEntry(position.getY() + 1); //get current line
 			line.erase(position.getX(), 1); //delete one character at cursor position
 			lines.replace(position.getY() + 1, line); //replace original with modified line
+
 			display();
+			break;
+		case 'u':
+			//peek at undo stack
+			if (undoStack.peek().getCommand == "dd") {
+
+
+			}
 			break;
 		default:
 			break;
@@ -140,9 +173,3 @@ void Editor::display() //output data
 
 	placeCursorAt(position);
 }
-
-/*
-	TODO:
-		- move cursor to end of shorter lines when moving udown (but preserve original X value) -- UP IS DONE
-		- change DD command to use _getwch()
-*/

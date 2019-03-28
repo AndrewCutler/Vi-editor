@@ -115,6 +115,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryNode.cpp" />
+    <ClCompile Include="BinaryNodeTree.cpp" />
+    <ClCompile Include="BinarySearchTree.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PrecondViolatedExcept.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -122,9 +125,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayStack.h" />
+    <ClInclude Include="BinaryNode.h" />
+    <ClInclude Include="BinaryNodeTree.h" />
+    <ClInclude Include="BinarySearchTree.h" />
+    <ClInclude Include="BinaryTreeInterface.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ListInterface.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="NotFoundException.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PrecondViolatedExcept.h" />
     <ClInclude Include="Snapshot.h" />

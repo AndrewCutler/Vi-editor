@@ -55,7 +55,11 @@ void Editor::run()
 	//point in file where command takes place
 	Point<int> place(0,0);
 
+	//last command on undo stack
 	Snapshot lastCommand;
+
+	//input while in insert mode
+	string input;
 
 	display();
 	char command = _getwch();
@@ -117,7 +121,8 @@ void Editor::run()
 			break;
 		case 'l': //move cursor right
 				  //cannot move right past size of current line
-			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1) {
+			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1 &&
+				lines.getEntry(position.getY() + 1).size() > 0) {
 				position.setX(position.getX() + 1);
 				placeCursorAt(position);
 			}
@@ -152,27 +157,50 @@ void Editor::run()
 
 			display();
 			break;
-		case 'u':
-			//peek at undo stack
-			lastCommand = undoStack.peek();
+		case'i'://insert into file
+			while (input != "q") {
 
-			if (undoStack.peek().getCommand() == "x") {
-				//line determined by y-coord of position saved in snapshot + 1
-				line = lines.getEntry(lastCommand.getLocation().getY() + 1);
-				//insert removed char into line at x-coord position saved in snapshot
-				line.insert(lastCommand.getLocation().getX(),undoStack.peek().getData());
-				//replace line with undone data
-				lines.replace(lastCommand.getLocation().getY() + 1, line);
 
-				//remove last command
-				undoStack.pop();
+				input = _getwch();
+				//get line at current cursor position
+				line = lines.getEntry(position.getY() + 1);
+				//insert input into that line
+				line.insert(position.getX(), input);
+				//save line to file
+				lines.replace(position.getY() + 1, line);
 
 				display();
-				break;
 			}
-			if (undoStack.peek().getCommand() == "dd") {
 
-				continue;
+			break;
+		case 'u':
+			//peek at undo stack
+			if (!undoStack.isEmpty()) {
+				lastCommand = undoStack.peek();
+
+				if (undoStack.peek().getCommand() == "x") {
+					//line determined by y-coord of position saved in snapshot + 1
+					line = lines.getEntry(lastCommand.getLocation().getY() + 1);
+					//insert removed char into line at x-coord position saved in snapshot
+					line.insert(lastCommand.getLocation().getX(),undoStack.peek().getData());
+					//replace line with undone data
+					lines.replace(lastCommand.getLocation().getY() + 1, line);
+
+					//remove last command
+					undoStack.pop();
+
+					display();
+				}
+				if (lastCommand.getCommand() == "dd") {
+					//insert line with removed data at location saved in last command
+					lines.insert(lastCommand.getLocation().getY(), lastCommand.getData());
+
+					//place cursor at start of undeleted line
+					position.setY(lastCommand.getLocation().getY() - 1);
+					position.setX(0);
+
+					display();
+				}
 			}
 			break;
 		default:

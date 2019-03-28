@@ -9,6 +9,7 @@ public:
 	//getters
 	string getData();
 	string getCommand();
+	Point<int> getLocation();
 
 	//setters
 	void setCommand(string);

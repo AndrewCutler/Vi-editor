@@ -20,6 +20,11 @@ string Snapshot::getCommand()
 	return undoCommand;
 }
 
+Point<int> Snapshot::getLocation()
+{
+	return location;
+}
+
 void Snapshot::setCommand(string command)
 {
 	undoCommand = command;

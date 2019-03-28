@@ -55,6 +55,8 @@ void Editor::run()
 	//point in file where command takes place
 	Point<int> place(0,0);
 
+	Snapshot lastCommand;
+
 	display();
 	char command = _getwch();
 	while (command != 'q') { //q to quit for now
@@ -139,6 +141,7 @@ void Editor::run()
 			//add command and deleted char to undo stack
 			snap.setCommand("x");		//command code
 			place.setX(position.getX());		//location of char in line
+			place.setY(position.getY());		//location of line in file
 			snap.setData(lines.getEntry(position.getY() + 1).substr(position.getX(), 1),place); //save data/location
 			undoStack.push(snap);
 
@@ -151,9 +154,25 @@ void Editor::run()
 			break;
 		case 'u':
 			//peek at undo stack
-			if (undoStack.peek().getCommand == "dd") {
+			lastCommand = undoStack.peek();
 
+			if (undoStack.peek().getCommand() == "x") {
+				//line determined by y-coord of position saved in snapshot + 1
+				line = lines.getEntry(lastCommand.getLocation().getY() + 1);
+				//insert removed char into line at x-coord position saved in snapshot
+				line.insert(lastCommand.getLocation().getX(),undoStack.peek().getData());
+				//replace line with undone data
+				lines.replace(lastCommand.getLocation().getY() + 1, line);
 
+				//remove last command
+				undoStack.pop();
+
+				display();
+				break;
+			}
+			if (undoStack.peek().getCommand() == "dd") {
+
+				continue;
 			}
 			break;
 		default:

@@ -158,16 +158,38 @@ void Editor::run()
 			display();
 			break;
 		case'i'://insert into file
-			while (input != "q") {
-
+			while (input[0] != 27) { //esc to exit insert mode
 
 				input = _getwch();
 				//get line at current cursor position
 				line = lines.getEntry(position.getY() + 1);
+
 				//insert input into that line
 				line.insert(position.getX(), input);
 				//save line to file
 				lines.replace(position.getY() + 1, line);
+				//move cursor to correct position
+				position.setX(position.getX() + 1);
+
+				//for return, create new node
+				if (input[0] == 13) {
+					//create and insert new node after current node
+					lines.insert(position.getY() + 2, line.substr(position.getX(), line.length()));
+
+					//cut current line and replace
+					line = line.substr(0, position.getX() - 1);
+					lines.replace(position.getY() + 1, line);
+
+					//move cursor to start of next line
+					position.setX(0);
+					position.setY(position.getY() + 1);
+
+				}
+
+				//for backspace
+				if (input[0] == 8) {
+					position.setX(position.getX() - 2);
+				}
 
 				display();
 			}
@@ -178,7 +200,7 @@ void Editor::run()
 			if (!undoStack.isEmpty()) {
 				lastCommand = undoStack.peek();
 
-				if (undoStack.peek().getCommand() == "x") {
+				if (lastCommand.getCommand() == "x") {
 					//line determined by y-coord of position saved in snapshot + 1
 					line = lines.getEntry(lastCommand.getLocation().getY() + 1);
 					//insert removed char into line at x-coord position saved in snapshot
@@ -198,6 +220,9 @@ void Editor::run()
 					//place cursor at start of undeleted line
 					position.setY(lastCommand.getLocation().getY() - 1);
 					position.setX(0);
+
+					//remove last command
+					undoStack.pop();
 
 					display();
 				}
@@ -220,3 +245,7 @@ void Editor::display() //output data
 
 	placeCursorAt(position);
 }
+
+//TODO:
+// re-enter insert mode
+// 

@@ -193,7 +193,7 @@ void Editor::run()
 
 				display();
 			}
-
+			input = ' ';
 			break;
 		case 'u':
 			//peek at undo stack
@@ -247,5 +247,6 @@ void Editor::display() //output data
 }
 
 //TODO:
-// re-enter insert mode
-// 
+// re-enter insert mode -- DONE
+// current character is deleted when insert mode is exited
+// cursor doesn't position properly when insert mode is exited multiple times

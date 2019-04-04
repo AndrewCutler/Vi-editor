@@ -27,13 +27,7 @@
     <ClCompile Include="Snapshot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryNodeTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BinaryNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BinarySearchTree.cpp">
+    <ClCompile Include="NotFoundException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

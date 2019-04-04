@@ -93,5 +93,5 @@ public:
 		operator=(const BinarySearchTree<ItemType>& rightHandSide);
 }; // end BinarySearchTree
 
-#include "BinarySearchTree.cpp"
+#include "BinarySearchTree.inl"
 #endif

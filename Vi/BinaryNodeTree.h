@@ -99,5 +99,5 @@ public:
 	BinaryNodeTree& operator=(const BinaryNodeTree& rightHandSide);
 }; // end BinaryNodeTree
 
-#include "BinaryNodeTree.cpp"
+#include "BinaryNodeTree.inl"
 #endif

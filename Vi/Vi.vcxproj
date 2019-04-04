@@ -115,10 +115,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BinaryNode.cpp" />
-    <ClCompile Include="BinaryNodeTree.cpp" />
-    <ClCompile Include="BinarySearchTree.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NotFoundException.cpp" />
     <ClCompile Include="PrecondViolatedExcept.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Snapshot.cpp" />

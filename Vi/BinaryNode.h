@@ -37,5 +37,5 @@ public:
 	void setRightChildPtr(std::shared_ptr<BinaryNode<ItemType>> rightPtr);
 }; // end BinaryNode
 
-#include "BinaryNode.cpp"
+#include "BinaryNode.inl"
 #endif 

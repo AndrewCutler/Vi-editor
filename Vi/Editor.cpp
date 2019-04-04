@@ -195,6 +195,28 @@ void Editor::run()
 			}
 			input = ' ';
 			break;
+		case 'I':
+			//move cursor to start of current line
+			position.setX(0);
+			placeCursorAt(position);
+
+			while (input[0] != 27) {
+				//get input
+				input = _getwch();
+
+				//get line at current cursor position
+				line = lines.getEntry(position.getY() + 1);
+
+				//insert input into that line
+				line.insert(position.getX(), input);
+				//save line to file
+				lines.replace(position.getY() + 1, line);
+				position.setX(position.getX() + 1);
+
+				display();
+			}
+			input = " ";
+			break;
 		case 'u':
 			//peek at undo stack
 			if (!undoStack.isEmpty()) {
@@ -226,6 +248,10 @@ void Editor::run()
 
 					display();
 				}
+				if (lastCommand.getCommand() == "i") {
+					//save the entire file 
+
+				}
 			}
 			break;
 		default:
@@ -248,5 +274,6 @@ void Editor::display() //output data
 
 //TODO:
 // re-enter insert mode -- DONE
+// use I instead of i to insert at beginning of line
 // current character is deleted when insert mode is exited
 // cursor doesn't position properly when insert mode is exited multiple times

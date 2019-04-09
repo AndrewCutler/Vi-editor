@@ -53,8 +53,13 @@ void Editor::run()
 	position.setY(0);
 
 	//keywords
-	//BinarySearchTree<Node<string>> keywordsBST;
-	//ifstream keywords("sample.txt");
+	BinarySearchTree<string> keywordsBST;
+	ifstream keywords("keywords.txt");
+	string word;
+	while (!keywords.eof()) {
+		keywords >> word;
+		keywordsBST.add(word);
+	}
 
 	string line;
 	int currentPosition, nextLineLength = 0;
@@ -227,6 +232,10 @@ void Editor::run()
 					//save line to file
 					lines.replace(position.getY() + 1, line);
 					position.setX(position.getX() + 1);
+
+					if (input[0] == 8) {
+						position.setX(position.getX() - 2);
+					}
 
 					display();
 				}

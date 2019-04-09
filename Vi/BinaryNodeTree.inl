@@ -250,7 +250,7 @@ BinaryNodeTree<ItemType>::BinaryNodeTree(const ItemType& rootItem,
 {   }  // end constructor
 
 template<class ItemType>
-BinaryNodeTree<ItemType>::BinaryNodeTree(const BinaryNodeTree<ItemType>& treePtr)
+BinaryNodeTree<ItemType>::BinaryNodeTree(const std::shared_ptr<BinaryNodeTree<ItemType>>& treePtr)
 {
 	rootPtr = copyTree(treePtr.rootPtr);
 }  // end copy constructor

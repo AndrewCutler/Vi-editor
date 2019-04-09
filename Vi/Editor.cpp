@@ -4,6 +4,7 @@
 #include <conio.h>
 #include "Point.h"
 #include "Snapshot.h"
+#include "BinarySearchTree.h"
 
 
 void placeCursorAt(Point<int> coordinate) {
@@ -13,6 +14,13 @@ void placeCursorAt(Point<int> coordinate) {
 	SetConsoleCursorPosition(
 		GetStdHandle(STD_OUTPUT_HANDLE),
 		coord);
+}
+
+void colorText(int value) {
+	COORD coord;
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	FlushConsoleInputBuffer(hConsole);
+	SetConsoleTextAttribute(hConsole, value);
 }
 
 Editor::Editor()
@@ -43,6 +51,10 @@ void Editor::run()
 	//initialize cursor position
 	position.setX(0);
 	position.setY(0);
+
+	//keywords
+	//BinarySearchTree<Node<string>> keywordsBST;
+	//ifstream keywords("sample.txt");
 
 	string line;
 	int currentPosition, nextLineLength = 0;
@@ -162,36 +174,39 @@ void Editor::run()
 
 				input = _getwch();
 				//get line at current cursor position
-				line = lines.getEntry(position.getY() + 1);
 
-				//insert input into that line
-				line.insert(position.getX(), input);
-				//save line to file
-				lines.replace(position.getY() + 1, line);
-				//move cursor to correct position
-				position.setX(position.getX() + 1);
+				if (input[0] != 27) {
+					line = lines.getEntry(position.getY() + 1);
 
-				//for return, create new node
-				if (input[0] == 13) {
-					//create and insert new node after current node
-					lines.insert(position.getY() + 2, line.substr(position.getX(), line.length()));
-
-					//cut current line and replace
-					line = line.substr(0, position.getX() - 1);
+					//insert input into that line
+					line.insert(position.getX(), input);
+					//save line to file
 					lines.replace(position.getY() + 1, line);
+					//move cursor to correct position
+					position.setX(position.getX() + 1);
 
-					//move cursor to start of next line
-					position.setX(0);
-					position.setY(position.getY() + 1);
+					//for return, create new node
+					if (input[0] == 13) {
+						//create and insert new node after current node
+						lines.insert(position.getY() + 2, line.substr(position.getX(), line.length()));
 
+						//cut current line and replace
+						line = line.substr(0, position.getX() - 1);
+						lines.replace(position.getY() + 1, line);
+
+						//move cursor to start of next line
+						position.setX(0);
+						position.setY(position.getY() + 1);
+
+					}
+
+					//for backspace
+					if (input[0] == 8) {
+						position.setX(position.getX() - 2);
+					}
+
+					display();
 				}
-
-				//for backspace
-				if (input[0] == 8) {
-					position.setX(position.getX() - 2);
-				}
-
-				display();
 			}
 			input = ' ';
 			break;
@@ -203,18 +218,20 @@ void Editor::run()
 			while (input[0] != 27) {
 				//get input
 				input = _getwch();
+				if (input[0] != 27) {
+					//get line at current cursor position
+					line = lines.getEntry(position.getY() + 1);
 
-				//get line at current cursor position
-				line = lines.getEntry(position.getY() + 1);
+					//insert input into that line
+					line.insert(position.getX(), input);
+					//save line to file
+					lines.replace(position.getY() + 1, line);
+					position.setX(position.getX() + 1);
 
-				//insert input into that line
-				line.insert(position.getX(), input);
-				//save line to file
-				lines.replace(position.getY() + 1, line);
-				position.setX(position.getX() + 1);
-
-				display();
+					display();
+				}
 			}
+
 			input = " ";
 			break;
 		case 'u':

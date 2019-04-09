@@ -30,8 +30,8 @@ public:
 
 	bool isLeaf() const;
 
-	auto getLeftChildPtr() const;
-	auto getRightChildPtr() const;
+	shared_ptr<BinaryNode<ItemType>> getLeftChildPtr() const;
+	shared_ptr<BinaryNode<ItemType>> getRightChildPtr() const;
 
 	void setLeftChildPtr(std::shared_ptr<BinaryNode<ItemType>> leftPtr);
 	void setRightChildPtr(std::shared_ptr<BinaryNode<ItemType>> rightPtr);

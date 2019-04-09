@@ -144,6 +144,7 @@
     <None Include="Point.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="keywords.txt" />
     <Text Include="sample.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

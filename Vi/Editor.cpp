@@ -6,7 +6,7 @@
 #include "Snapshot.h"
 #include "BinarySearchTree.h"
 
-
+/* ================ NON-EDITOR CLASS FUNCTIONS ================ */
 void placeCursorAt(Point<int> coordinate) {
 	COORD coord;
 	coord.X = coordinate.getX();
@@ -23,6 +23,16 @@ void colorText(int value) {
 	SetConsoleTextAttribute(hConsole, value);
 }
 
+void visit(string& item) {
+	cout << item << " ";
+}
+
+/* CONSTANTS */
+const int BACKSPACE = 8;
+const int RETURN = 13;
+const int ESCAPE = 27;
+
+/* ================ EDITOR CLASS FUNCTIONS ================ */
 Editor::Editor()
 {
 }
@@ -52,8 +62,7 @@ void Editor::run()
 	position.setX(0);
 	position.setY(0);
 
-	//keywords
-	BinarySearchTree<string> keywordsBST;
+	//keywords into BST
 	ifstream keywords("keywords.txt");
 	string word;
 	while (!keywords.eof()) {
@@ -61,8 +70,8 @@ void Editor::run()
 		keywordsBST.add(word);
 	}
 
-	string line;
-	int currentPosition, nextLineLength = 0;
+	string line; //currently selected line
+	int nextLineLength = 0; //
 	string nextLine;
 	Point<int> dummyPosition;
 
@@ -78,7 +87,8 @@ void Editor::run()
 	//input while in insert mode
 	string input;
 
-	display();
+	//display();
+	displayColors();
 	char command = _getwch();
 	while (command != 'q') { //q to quit for now
 		command = _getwch();
@@ -86,17 +96,15 @@ void Editor::run()
 		//switch statement for command
 		switch (command) {
 		case 'j': //move cursor down
-
 			//only move down if eof not reached
 			if (position.getY() < lines.getLength() - 1) {
 
 				//go to end of line, save x-coord when jumping to shorter lines
-				currentPosition = position.getX();
 				nextLine = lines.getEntry(position.getY() + 2);
 				nextLineLength = nextLine.length();
 
 				//if next line is shorter, go to end of it, saving cursor position
-				if (nextLineLength < currentPosition) {
+				if (nextLineLength < position.getX()) {
 					dummyPosition.setX(nextLineLength - 1);
 					dummyPosition.setY(position.getY() + 1);
 					placeCursorAt(dummyPosition);
@@ -111,14 +119,12 @@ void Editor::run()
 			break;
 		case 'k': //move cursor up
 			if (position.getY() > 0) { //top boundary, never negative
-
 				//go to end of line, save x-coord when jumping to shorter lines
-				currentPosition = position.getX();
 				nextLine = lines.getEntry(position.getY());
 				nextLineLength = nextLine.length();
 
 				//if next line is shorter, go to end of it, saving cursor position
-				if (nextLineLength < currentPosition) {
+				if (nextLineLength < position.getX()) {
 					dummyPosition.setX(nextLineLength - 1);
 					dummyPosition.setY(position.getY() - 1);
 					placeCursorAt(dummyPosition);
@@ -137,7 +143,7 @@ void Editor::run()
 			}
 			break;
 		case 'l': //move cursor right
-				  //cannot move right past size of current line
+			//cannot move right past size of current line
 			if (position.getX() < lines.getEntry(position.getY() + 1).size() - 1 &&
 				lines.getEntry(position.getY() + 1).size() > 0) {
 				position.setX(position.getX() + 1);
@@ -155,7 +161,6 @@ void Editor::run()
 
 				//remove current line (+1 for 0-indexing)
 				lines.remove(position.getY() + 1);
-				display();
 				break;
 			}
 			break;
@@ -172,26 +177,38 @@ void Editor::run()
 			line.erase(position.getX(), 1); //delete one character at cursor position
 			lines.replace(position.getY() + 1, line); //replace original with modified line
 
-			display();
 			break;
 		case'i'://insert into file
-			while (input[0] != 27) { //esc to exit insert mode
+			while (input[0] != ESCAPE) { //esc to exit insert mode
 
 				input = _getwch();
-				//get line at current cursor position
 
-				if (input[0] != 27) {
+				if (input[0] != ESCAPE) {
+					//get line at current cursor position
 					line = lines.getEntry(position.getY() + 1);
 
-					//insert input into that line
-					line.insert(position.getX(), input);
+					if (input[0] != 8) { //if input is not a backspace...
+						//insert input into that line 
+						line.insert(position.getX(), input);
+						//move cursor to correct position, unless backspace
+						position.setX(position.getX() + 1);
+					}		
+
+					//for backspace
+					if (input[0] == BACKSPACE) {
+						if (position.getX() > 0) {
+							//erase one character, before cursor
+							line.erase(position.getX() - 1,1);
+							//save line
+							position.setX(position.getX() - 1);
+						}
+					}
+
 					//save line to file
 					lines.replace(position.getY() + 1, line);
-					//move cursor to correct position
-					position.setX(position.getX() + 1);
 
 					//for return, create new node
-					if (input[0] == 13) {
+					if (input[0] == RETURN) {
 						//create and insert new node after current node
 						lines.insert(position.getY() + 2, line.substr(position.getX(), line.length()));
 
@@ -202,15 +219,9 @@ void Editor::run()
 						//move cursor to start of next line
 						position.setX(0);
 						position.setY(position.getY() + 1);
-
 					}
 
-					//for backspace
-					if (input[0] == 8) {
-						position.setX(position.getX() - 2);
-					}
-
-					display();
+					//display();
 				}
 			}
 			input = ' ';
@@ -220,24 +231,48 @@ void Editor::run()
 			position.setX(0);
 			placeCursorAt(position);
 
-			while (input[0] != 27) {
+			while (input[0] != ESCAPE) {
 				//get input
 				input = _getwch();
-				if (input[0] != 27) {
+				if (input[0] != ESCAPE) {
 					//get line at current cursor position
 					line = lines.getEntry(position.getY() + 1);
 
-					//insert input into that line
-					line.insert(position.getX(), input);
-					//save line to file
-					lines.replace(position.getY() + 1, line);
-					position.setX(position.getX() + 1);
-
-					if (input[0] == 8) {
-						position.setX(position.getX() - 2);
+					if (input[0] != 8) { //if input is not a backspace...
+										 //insert input into that line 
+						line.insert(position.getX(), input);
+						//move cursor to correct position, unless backspace
+						position.setX(position.getX() + 1);
 					}
 
-					display();
+					//for backspace
+					if (input[0] == BACKSPACE) {
+						if (position.getX() > 0) {
+							//erase one character, before cursor
+							line.erase(position.getX() - 1, 1);
+							//save line
+							position.setX(position.getX() - 1);
+						}
+					}
+
+					//save line to file
+					lines.replace(position.getY() + 1, line);
+
+					//for return, create new node
+					if (input[0] == RETURN) {
+						//create and insert new node after current node
+						lines.insert(position.getY() + 2, line.substr(position.getX(), line.length()));
+
+						//cut current line and replace
+						line = line.substr(0, position.getX() - 1);
+						lines.replace(position.getY() + 1, line);
+
+						//move cursor to start of next line
+						position.setX(0);
+						position.setY(position.getY() + 1);
+					}
+
+					//display();
 				}
 			}
 
@@ -259,7 +294,6 @@ void Editor::run()
 					//remove last command
 					undoStack.pop();
 
-					display();
 				}
 				if (lastCommand.getCommand() == "dd") {
 					//insert line with removed data at location saved in last command
@@ -272,17 +306,18 @@ void Editor::run()
 					//remove last command
 					undoStack.pop();
 
-					display();
 				}
-				if (lastCommand.getCommand() == "i") {
+				if (lastCommand.getCommand() == "i") { 
 					//save the entire file 
-
 				}
 			}
+
 			break;
 		default:
 			break;
 		}
+
+		//display();
 	}
 }
 
@@ -298,8 +333,37 @@ void Editor::display() //output data
 	placeCursorAt(position);
 }
 
+void Editor::displayColors() {
+	bool isKeyword;
+	string line;
+	for (int i = 1; i < lines.getLength() + 1; i++) {
+		line = lines.getEntry(i); //get current line
+		int k = 0;
+		//check line for keywords
+		for (int j = 0; j < line.size(); j++) {
+			if (tolower(line[j] >= 'a' && tolower(line[j]) <= 'z')) {
+				string currentWord;
+				for (k = j; (tolower(line[k]) >= 'a' && tolower(line[k]) <= 'z'); k++) {
+					currentWord += line[k];
+				}
+				isKeyword = keywordsBST.contains(currentWord);
+				if (!isKeyword) colorText(FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | 0x08);
+				else colorText(0xf0);
+				cout << currentWord;
+				if (k != 0) j = k - 1;
+			}
+			
+			else {
+				cout << line[j];
+				colorText(0xf0);
+			}
+		}
+		cout << endl;
+	}
+
+}
+
 //TODO:
-// re-enter insert mode -- DONE
-// use I instead of i to insert at beginning of line
-// current character is deleted when insert mode is exited
-// cursor doesn't position properly when insert mode is exited multiple times
+// color keywords work, background is not black
+// add INSERT mode indicator at bottom
+// undo for inserts

@@ -89,7 +89,9 @@ void Editor::run()
 
 	//display();
 	displayColors();
+
 	char command = _getwch();
+
 	while (command != 'q') { //q to quit for now
 		command = _getwch();
 
@@ -222,6 +224,7 @@ void Editor::run()
 					}
 
 					//display();
+					displayColors();
 				}
 			}
 			input = ' ';
@@ -273,6 +276,7 @@ void Editor::run()
 					}
 
 					//display();
+					displayColors();
 				}
 			}
 
@@ -318,6 +322,7 @@ void Editor::run()
 		}
 
 		//display();
+		displayColors();
 	}
 }
 
@@ -334,6 +339,8 @@ void Editor::display() //output data
 }
 
 void Editor::displayColors() {
+	system("cls");
+
 	bool isKeyword;
 	string line;
 	for (int i = 1; i < lines.getLength() + 1; i++) {
@@ -348,19 +355,20 @@ void Editor::displayColors() {
 				}
 				isKeyword = keywordsBST.contains(currentWord);
 				if (!isKeyword) colorText(FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | 0x08);
-				else colorText(0xf0);
+				else colorText(BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
 				cout << currentWord;
 				if (k != 0) j = k - 1;
 			}
 			
 			else {
+				colorText(BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
 				cout << line[j];
-				colorText(0xf0);
 			}
 		}
 		cout << endl;
 	}
 
+	placeCursorAt(position);
 }
 
 //TODO:

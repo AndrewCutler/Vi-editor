@@ -3,6 +3,10 @@ int main() {
     int grade = "100";
     cout << "I hope to get a " << grade << " in " << courseName << endl;
 
+	while (true) {
+		double value = 42.0;
+	}
+
     return 0;
 
 }

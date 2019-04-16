@@ -354,14 +354,14 @@ void Editor::displayColors() {
 					currentWord += line[k];
 				}
 				isKeyword = keywordsBST.contains(currentWord);
-				if (!isKeyword) colorText(FOREGROUND_BLUE | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | 0x08);
-				else colorText(BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+				if (!isKeyword) colorText(FOREGROUND_BLUE |  0xF0);
+				else colorText(0 | 0xF0);
 				cout << currentWord;
 				if (k != 0) j = k - 1;
 			}
 			
 			else {
-				colorText(BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+				colorText(00 | 0xF0);
 				cout << line[j];
 			}
 		}

@@ -90,6 +90,9 @@ void Editor::run()
 	//display();
 	displayColors();
 
+	//bottom of console 
+	Point<int> endOfConsole(0, 25);
+
 	char command = _getwch();
 
 	while (command != 'q') { //q to quit for now
@@ -180,8 +183,15 @@ void Editor::run()
 			lines.replace(position.getY() + 1, line); //replace original with modified line
 
 			break;
+		//################## INSERT MODE
 		case'i'://insert into file
+			//output INSERT mode indicator
+			placeCursorAt(endOfConsole);
+			cout << " -- INSERT --";
+			placeCursorAt(position);
+
 			while (input[0] != ESCAPE) { //esc to exit insert mode
+
 
 				input = _getwch();
 
@@ -225,11 +235,20 @@ void Editor::run()
 
 					//display();
 					displayColors();
+
+					//output INSERT mode indicator
+					placeCursorAt(endOfConsole);
+					cout << " -- INSERT --";
+					placeCursorAt(position);
 				}
 			}
 			input = ' ';
 			break;
 		case 'I':
+			//output INSERT mode indicator
+			placeCursorAt(endOfConsole);
+			cout << " -- INSERT --";
+
 			//move cursor to start of current line
 			position.setX(0);
 			placeCursorAt(position);
@@ -277,11 +296,17 @@ void Editor::run()
 
 					//display();
 					displayColors();
+					//output INSERT mode indicator
+					placeCursorAt(endOfConsole);
+					cout << " -- INSERT --";
+					placeCursorAt(position);
 				}
 			}
 
 			input = " ";
 			break;
+
+		//########### UNDO
 		case 'u':
 			//peek at undo stack
 			if (!undoStack.isEmpty()) {
@@ -316,6 +341,17 @@ void Editor::run()
 				}
 			}
 
+			break;
+
+		//########## COMMAND MODE
+		case ':':
+			command = _getwch();
+			if (command == 'w') {
+					placeCursorAt(endOfConsole);
+					cout << "Saving file...";
+					system("pause");
+					placeCursorAt(position);
+			}
 			break;
 		default:
 			break;
@@ -372,6 +408,5 @@ void Editor::displayColors() {
 }
 
 //TODO:
-// color keywords work, background is not black
-// add INSERT mode indicator at bottom
 // undo for inserts
+// fix arrows for navigation in insert mode
